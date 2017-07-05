@@ -6,11 +6,30 @@ import pygame
 
 pygame.init()
 
-gameDisplay = pygame.display.set_mode((800,600))
+display_width = 800
+display_height = 600
+
+white = (255,255,255)
+gameDisplay = pygame.display.set_mode((display_width,display_height))
 
 pygame.display.set_caption('A bit Racey')
 
 clock  = pygame.time.Clock()
+
+carImg = pygame.image.load('car.png')
+
+
+def car(x,y):
+    '''
+    显示汽车的图片
+    '''
+    gameDisplay.blit(carImg,(x,y))
+
+x =(display_width * 0.45)
+y = (display_height * 0.8)
+
+
+
 
 crashed = False
 
@@ -21,7 +40,8 @@ while not crashed:
             crashed = True
 
         print(event)
-    
+    gameDisplay.fill(white)
+    car(x,y)
     pygame.display.update()
     clock.tick(60)
 
