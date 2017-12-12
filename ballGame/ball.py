@@ -13,9 +13,6 @@ pygame.init()
 
 display_width = 800
 display_height = 600
-# vInfo = pygame.display.Info()
-# display_width = vInfo.current_w
-# display_height = vInfo.current_h
 speed = [1, 1]
 fps = 120
 white = (255, 255, 255)
@@ -35,26 +32,45 @@ ball = pygame.image.load('static/img/ball.png')
 ballrect = ball.get_rect()
 
 crashed = False
+
+
+def speed_down(speed):
+    if speed > 0:
+        new_speed = speed - 1
+    else:
+        new_speed = speed + 1
+    print('new speed is {}'.format(new_speed))
+    return new_speed
+
+
+def speed_up(speed):
+    if speed > 0:
+        new_speed = speed + 1
+    else:
+        new_speed = speed - 1
+    print('new speed is {}'.format(new_speed))
+    return new_speed
+
+
+
 # pygame的主寻坏
 while not crashed:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             crashed = True
-            sys.exit()
         elif event.type == pygame.KEYDOWN:
+            # 小球速度控制备部分
             if event.key == pygame.K_LEFT:
-                speed[0] = speed[0] if speed[0] == 0 else (
-                    abs(speed[0]) - 1) * int(speed[0] / abs(speed[0]))
+                speed[0] = speed_down(speed[0])
             elif event.key == pygame.K_RIGHT:
-                speed[0] = speed[0] + 1 if speed[0] > 0 else speed[0] - 1
+                speed[0] = speed_up(speed[0])
             elif event.key == pygame.K_UP:
-                speed[1] = speed[1] + 1 if speed[1] > 0 else speed[1] - 1
+                speed[1] = speed_up(speed[1])
             elif event.key == pygame.K_DOWN:
-                speed[1] = speed[1] if speed[1] == 0 else (
-                    abs(speed[1]) - 1) * int(speed[1] / abs(speed[1]))
+                speed[1] = speed_down(speed[1])
+            # esc键退出功能
             elif event.key == pygame.K_ESCAPE:
                 crashed = True
-                sys.exit()
         # 增加屏幕尺寸的动态感应
         elif event.type == pygame.VIDEORESIZE:
             display_width = event.size[0]
