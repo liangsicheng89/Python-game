@@ -32,6 +32,7 @@ ball = pygame.image.load('static/img/ball.png')
 ballrect = ball.get_rect()
 
 crashed = False
+still = False
 
 
 def speed_down(speed):
@@ -77,9 +78,17 @@ while not crashed:
             display_height = event.size[1]
             screen = pygame.display.set_mode(
                 (display_width, display_height), pygame.RESIZABLE)
-
+        # 鼠标控制部分
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                still = True
+        elif event.type == pygame.MOUSEBUTTONUP:
+            still = False
+            if event.button == 1:
+                ballrect = ballrect.move(
+                    event.pos[0] - ballrect.left, event.pos[1] - ballrect.top)
     # 增加窗口最小话感知暂停
-    if pygame.display.get_active():
+    if pygame.display.get_active() and not still:
         # 将矩形移动
         ballrect = ballrect.move(speed[0], speed[1])
     # 碰撞处理
