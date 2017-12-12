@@ -85,8 +85,12 @@ while not crashed:
     # 碰撞处理
     if ballrect.left < 0 or ballrect.right > display_width:
         speed[0] = -speed[0]
+        if ballrect.right > display_width and ballrect.right + speed[0] > ballrect.right:
+            speed[0] = - speed[0]
     if ballrect.top < 0 or ballrect.bottom > display_height:
         speed[1] = -speed[1]
+        if ballrect.bottom > display_height and ballrect.bottom + speed[1] > ballrect.bottom:
+            speed[1] = - speed[1]
     # 填充背景图像
     screen.fill(white)
     # 将一个图像绘制到另外一个图像上
