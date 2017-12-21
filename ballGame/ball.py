@@ -7,6 +7,7 @@ pygame的最基本开发框架
 
 import pygame
 import sys
+import pygame.freetype
 
 
 pygame.init()
@@ -15,7 +16,6 @@ display_width = 800
 display_height = 600
 speed = [1, 1]
 fps = 120
-white = (255, 255, 255)
 screen = pygame.display.set_mode(
     (display_width, display_height), pygame.RESIZABLE)
 
@@ -26,18 +26,25 @@ pygame.display.set_caption('Python 游戏 --- 壁球小程序')
 
 # pygame 操作时间的对象
 clock = pygame.time.Clock()
-
+GOLD = 255, 251, 0
 ball = pygame.image.load('static/img/ball.png')
 # 将图片对象替换成正切矩形对象
 ballrect = ball.get_rect()
 
+# 增加文字版
+f1 = pygame.freetype.Font("static//fonts//my.ttf", 36)
+f1surf, f1rect = f1.render("EHCO", fgcolor=GOLD, size=50)
+ballrect = f1rect
 crashed = False
 still = False
+bgcolor = pygame.Color('black')
 
 
 def speed_down(speed):
     if speed > 0:
         new_speed = speed - 1
+    elif speed == 0:
+        new_speed = 1
     else:
         new_speed = speed + 1
     print('new speed is {}'.format(new_speed))
@@ -52,6 +59,9 @@ def speed_up(speed):
     print('new speed is {}'.format(new_speed))
     return new_speed
 
+
+def RBGChannel(speed):
+    return 0 if speed < 0 else(255 if speed > 255 else int(speed))
 
 
 # pygame的主寻坏
@@ -100,11 +110,18 @@ while not crashed:
         speed[1] = -speed[1]
         if ballrect.bottom > display_height and ballrect.bottom + speed[1] > ballrect.bottom:
             speed[1] = - speed[1]
+    # 色彩变换处理
+    bgcolor.r = RBGChannel(ballrect.left * 255 / display_width)
+    bgcolor.g = RBGChannel(ballrect.top * 255 / display_height)
+    bgcolor.b = RBGChannel(
+        min(speed[0], speed[1]) * 255 / max(speed[0], speed[1]))
+
     # 填充背景图像
-    screen.fill(white)
+    screen.fill(bgcolor)
     # 将一个图像绘制到另外一个图像上
     # 这里将小球的图像跟随了小球的正切矩形上
-    screen.blit(ball, ballrect)
+    # 文字替换小球
+    screen.blit(f1surf, ballrect)
     pygame.display.update()
     # 通过时间间隔来控制刷新
     clock.tick(fps)
